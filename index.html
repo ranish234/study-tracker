@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Please Study Ranish | Automated Cycles</title>
+    <style>
+        /* Modern Minimal Dark Palette */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0b0c10;
+            color: #c5c6c7;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background 0.5s ease;
+        }
+
+        /* Mode Conditional Styling Classes */
+        body.study-mode { background-color: #0b0c10; }
+        body.break-mode { background-color: #0c1a14; }
+
+        .dashboard-card {
+            background: linear-gradient(145deg, rgba(20, 24, 33, 0.95), rgba(13, 15, 18, 0.98));
+            border: 2px solid #1f2833;
+            border-radius: 20px;
+            padding: 35px;
+            text-align: center;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+            width: 650px;
+            max-width: 90%;
+            box-sizing: border-box;
+            transition: border 0.5s ease;
+        }
+
+        body.study-mode .dashboard-card { border-color: rgba(255, 74, 90, 0.3); }
+        body.break-mode .dashboard-card { border-color: rgba(46, 204, 113, 0.4); }
+
+        /* Status Badge Indicator */
+        .status-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            transition: all 0.5s ease;
+        }
+        body.study-mode .status-badge { background: #ff4a5a; color: #fff; box-shadow: 0 0 15px rgba(255, 74, 90, 0.4); }
+        body.break-mode .status-badge { background: #2ecc71; color: #fff; box-shadow: 0 0 15px rgba(46, 204, 113, 0.4); }
+
+        h1 {
+            color: #ffffff;
+            font-size: 2.2rem;
+            margin: 0 0 5px 0;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+        }
+
+        .subtitle {
+            font-size: 0.85rem;
+            color: #45a29e;
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            margin-bottom: 25px;
+        }
+
+        /* Large Focus Countdown Display */
+        .timer-grid {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            background: #020c1b;
+            padding: 25px;
+            border-radius: 14px;
+            border: 1px solid #1f2833;
+            margin-bottom: 25px;
+        }
+
+        .time-slot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 90px;
+        }
+
+        .digits {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 4rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .unit-label {
+            font-size: 0.75rem;
+            color: #45a29e;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 2px;
+        }
+
+        /* Text Loop Ticker Box */
+        .alert-ticker-belt {
+            border-radius: 8px;
+            padding: 12px;
+            overflow: hidden;
+            position: relative;
+            height: 24px;
+            margin-bottom: 30px;
+            transition: all 0.5s ease;
+        }
+        body.study-mode .alert-ticker-belt { background: rgba(255, 74, 90, 0.1); border: 1px solid rgba(255, 74, 90, 0.3); }
+        body.break-mode .alert-ticker-belt { background: rgba(46, 204, 113, 0.1); border: 1px solid rgba(46, 204, 113, 0.3); }
+
+        .scrolling-manifesto {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            line-height: 24px;
+            text-align: left;
+            white-space: nowrap;
+            font-weight: 600;
+            font-size: 0.9rem;
+            animation: scroll-left 25s linear infinite;
+        }
+        body.study-mode .scrolling-manifesto { color: #ff4a5a; }
+        body.break-mode .scrolling-manifesto { color: #2ecc71; }
+
+        @keyframes scroll-left {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* Vision Gallery Section */
+        .vision-gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .vision-card {
+            background: #1f2833;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .vision-image {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            filter: grayscale(40%) brightness(80%);
+        }
+
+        .vision-caption {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 10px 5px;
+            color: #c5c6c7;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body class="study-mode">
+
+    <div class="dashboard-card">
+        <!-- Status Indicator Grid Anchor -->
+        <div class="status-badge" id="current-mode-badge">Study Session</div>
+
+        <h1>PLEASE STUDY RANISH</h1>
+        <div class="subtitle">16-Hour Marathon Tracker</div>
+
+        <!-- Timer Display Block -->
+        <div class="timer-grid">
+            <div class="time-slot">
+                <span class="digits" id="minutes">50</span>
+                <span class="unit-label">Minutes</span>
+            </div>
+            <div class="time-slot">
+                <span class="digits" id="seconds">00</span>
+                <span class="unit-label">Seconds</span>
+            </div>
+        </div>
+
+        <!-- Dynamic Scrolling Alert Stream Header -->
+        <div class="alert-ticker-belt">
+            <div class="scrolling-manifesto" id="ticker-text">
+                ⚠️ RANISH: LOCK IN NOW. IF YOU FAIL THESE TASKS, YOU WILL MISS PLACEMENTS, FAIL THE GATE EXAM, AND FORFEIT NANDA DEVI & THE NORTH EAST.
+            </div>
+        </div>
+
+        <!-- Core Target Dream Display Deck -->
+        <div class="vision-gallery">
+            <div class="vision-card">
+                <img src="https://unsplash.com" alt="Career Goals" class="vision-image">
+                <div class="vision-caption">💼 GATE & Job</div>
+            </div>
+            <div class="vision-card">
+                <img src="https://unsplash.com" alt="Mountain Goals" class="vision-image">
+                <div class="vision-caption">🏔️ Nanda Devi</div>
+            </div>
+            <div class="vision-card">
+                <img src="https://unsplash.com" alt="Travel Goals" class="vision-image">
+                <div class="vision-caption">🌿 North East</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set exact standard session metrics (in minutes)
+        const STUDY_TIME = 50;
+        const BREAK_TIME = 10;
+
+        let isStudyMode = true;
+        let timeRemainingSeconds = STUDY_TIME * 60;
+
+        const minutesDisplay = document.getElementById('minutes');
+        const secondsDisplay = document.getElementById('seconds');
+        const modeBadge = document.getElementById('current-mode-badge');
+        const tickerText = document.getElementById('ticker-text');
+        const bodyElement = document.body;
+
+        function runTimerStep() {
+            if (timeRemainingSeconds <= 0) {
+                // Switch operational modes automatically when a block runs out
+                isStudyMode = !isStudyMode;
+                
+                if (isStudyMode) {
+                    timeRemainingSeconds = STUDY_TIME * 60;
+                    bodyElement.className = "study-mode";
+                    modeBadge.textContent = "Study Session";
+                    tickerText.textContent = "⚠️ RANISH: LOCK IN NOW. IF YOU FAIL THESE TASKS, YOU WILL MISS PLACEMENTS, FAIL THE GATE EXAM, AND FORFEIT NANDA DEVI & THE NORTH EAST.";
+                } else {
+                    timeRemainingSeconds = BREAK_TIME * 60;
+                    bodyElement.className = "break-mode";
+                    modeBadge.textContent = "Break Time";
+                    tickerText.textContent = "🛑 BREAK ACTIVE: STAND UP, STRETCH, DRINK WATER, AND RESET YOUR MIND. DO NOT ACCESS DISTRACTING APPS.";
+                }
+            }
+
+            let displayMins = Math.floor(timeRemainingSeconds / 60);
+            let displaySecs = timeRemainingSeconds % 60;
+
+            minutesDisplay.textContent = String(displayMins).padStart(2, '0');
+            secondsDisplay.textContent = String(displaySecs).padStart(2, '0');
+
+            timeRemainingSeconds--;
+        }
+
+        // Initialize execution sequence loop
+        setInterval(runTimerStep, 1000);
+        runTimerStep(); // Immediate startup paint execution
+    </script>
+</body>
+</html>
