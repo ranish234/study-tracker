@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Please Study Ranish | Automated Cycles</title>
+    <title>Please Study Ranish | 120 Day Challenge</title>
     <style>
         /* Modern Minimal Dark Palette */
         body {
@@ -39,6 +39,45 @@
 
         body.study-mode .dashboard-card { border-color: rgba(255, 74, 90, 0.3); }
         body.break-mode .dashboard-card { border-color: rgba(46, 204, 113, 0.4); }
+
+        /* Day Progress Tracker Header Layout */
+        .day-tracker-container {
+            background: #020c1b;
+            border: 1px solid #1f2833;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 25px;
+        }
+
+        .day-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .day-text span {
+            color: #66fcf1;
+            font-size: 1.4rem;
+            text-shadow: 0 0 10px rgba(102, 252, 241, 0.4);
+        }
+
+        .progress-bar-bg {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            height: 12px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(90deg, #45a29e, #66fcf1);
+            height: 100%;
+            width: 0.83%; /* Programmatically updated */
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(102, 252, 241, 0.5);
+        }
 
         /* Status Badge Indicator */
         .status-badge {
@@ -145,6 +184,7 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 15px;
             margin-top: 20px;
+            margin-bottom: 25px;
         }
 
         .vision-card {
@@ -160,6 +200,11 @@
             height: 100px;
             object-fit: cover;
             filter: grayscale(40%) brightness(80%);
+            transition: all 0.3s ease;
+        }
+
+        .vision-card:hover .vision-image {
+            filter: grayscale(0%) brightness(100%);
         }
 
         .vision-caption {
@@ -170,12 +215,40 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
+
+        /* Day Completion Action Button */
+        .complete-day-btn {
+            background: #1f2833;
+            border: 1px solid #45a29e;
+            color: #66fcf1;
+            padding: 10px 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.2s ease;
+        }
+
+        .complete-day-btn:hover {
+            background: #45a29e;
+            color: #0b0c10;
+            box-shadow: 0 0 15px rgba(102, 252, 241, 0.3);
+        }
     </style>
 </head>
 <body class="study-mode">
 
     <div class="dashboard-card">
-        <!-- Status Indicator Grid Anchor -->
+        <!-- 120-Day Target Tracker Component Module -->
+        <div class="day-tracker-container">
+            <div class="day-text">Day <span id="current-day-label">1</span> / 120 Completed</div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progress-bar-fill-element"></div>
+            </div>
+        </div>
+
         <div class="status-badge" id="current-mode-badge">Study Session</div>
 
         <h1>PLEASE STUDY RANISH</h1>
@@ -203,64 +276,29 @@
         <!-- Core Target Dream Display Deck -->
         <div class="vision-gallery">
             <div class="vision-card">
-                <img src="https://unsplash.com" alt="Career Goals" class="vision-image">
+                <img src="C:\Users\HOME\Downloads\gate.jfif" alt="Career Goals" class="vision-image">
                 <div class="vision-caption">💼 GATE & Job</div>
             </div>
             <div class="vision-card">
-                <img src="https://unsplash.com" alt="Mountain Goals" class="vision-image">
+                <img src="C:\Users\HOME\Downloads\mountain.jfif" alt="Nanda Devi & Valley of Flowers" class="vision-image">
                 <div class="vision-caption">🏔️ Nanda Devi</div>
             </div>
             <div class="vision-card">
-                <img src="https://unsplash.com" alt="Travel Goals" class="vision-image">
+                <img src="C:\Users\HOME\Downloads\lake.webp" alt="Travel Goals" class="vision-image">
                 <div class="vision-caption">🌿 North East</div>
             </div>
         </div>
+
+        <!-- Progress Lock Interactive Button -->
+        <button class="complete-day-btn" onclick="incrementStudyDay()">Log Completed Day</button>
     </div>
 
     <script>
-        // Set exact standard session metrics (in minutes)
         const STUDY_TIME = 50;
         const BREAK_TIME = 10;
+        const TOTAL_TARGET_DAYS = 120;
 
         let isStudyMode = true;
         let timeRemainingSeconds = STUDY_TIME * 60;
-
-        const minutesDisplay = document.getElementById('minutes');
-        const secondsDisplay = document.getElementById('seconds');
-        const modeBadge = document.getElementById('current-mode-badge');
-        const tickerText = document.getElementById('ticker-text');
-        const bodyElement = document.body;
-
-        function runTimerStep() {
-            if (timeRemainingSeconds <= 0) {
-                // Switch operational modes automatically when a block runs out
-                isStudyMode = !isStudyMode;
-                
-                if (isStudyMode) {
-                    timeRemainingSeconds = STUDY_TIME * 60;
-                    bodyElement.className = "study-mode";
-                    modeBadge.textContent = "Study Session";
-                    tickerText.textContent = "⚠️ RANISH: LOCK IN NOW. IF YOU FAIL THESE TASKS, YOU WILL MISS PLACEMENTS, FAIL THE GATE EXAM, AND FORFEIT NANDA DEVI & THE NORTH EAST.";
-                } else {
-                    timeRemainingSeconds = BREAK_TIME * 60;
-                    bodyElement.className = "break-mode";
-                    modeBadge.textContent = "Break Time";
-                    tickerText.textContent = "🛑 BREAK ACTIVE: STAND UP, STRETCH, DRINK WATER, AND RESET YOUR MIND. DO NOT ACCESS DISTRACTING APPS.";
-                }
-            }
-
-            let displayMins = Math.floor(timeRemainingSeconds / 60);
-            let displaySecs = timeRemainingSeconds % 60;
-
-            minutesDisplay.textContent = String(displayMins).padStart(2, '0');
-            secondsDisplay.textContent = String(displaySecs).padStart(2, '0');
-
-            timeRemainingSeconds--;
-        }
-
-        // Initialize execution sequence loop
-        setInterval(runTimerStep, 1000);
-        runTimerStep(); // Immediate startup paint execution
-    </script>
-</body>
-</html>
+        
+        // Use browser memory to save your day count so it never resets when refreshing
